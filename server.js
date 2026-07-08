@@ -26,7 +26,63 @@ if (!fs.existsSync(DB_FILE)) saveDB({ entries: [], winners: [] });
 // --- Middleware ---
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Twilio posts form-encoded
+
+// Guard the admin page: redirect to login unless authenticated (must precede static).
+app.get(['/admin', '/admin.html'], (req, res, next) => {
+  if (verifyToken(parseCookies(req)[SESSION_COOKIE])) return next();
+  res.redirect('/login.html');
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
+
+// --- Admin authentication ---
+const ADMIN_USER = process.env.ADMIN_USER || 'admin@indianoil.org';
+const ADMIN_PASS = process.env.ADMIN_PASS || 'admin@123';
+const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
+const SESSION_TTL_MS = 8 * 60 * 60 * 1000; // 8 hours
+const SESSION_COOKIE = 'admin_session';
+
+function signToken(payload) {
+  const body = Buffer.from(JSON.stringify(payload)).toString('base64url');
+  const sig = crypto.createHmac('sha256', SESSION_SECRET).update(body).digest('base64url');
+  return `${body}.${sig}`;
+}
+function verifyToken(token) {
+  if (!token || !token.includes('.')) return null;
+  const [body, sig] = token.split('.');
+  const expected = crypto.createHmac('sha256', SESSION_SECRET).update(body).digest('base64url');
+  const a = Buffer.from(sig);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return null;
+  try {
+    const payload = JSON.parse(Buffer.from(body, 'base64url').toString());
+    if (!payload.exp || Date.now() > payload.exp) return null;
+    return payload;
+  } catch (e) {
+    return null;
+  }
+}
+function parseCookies(req) {
+  const out = {};
+  (req.headers.cookie || '').split(';').forEach((p) => {
+    const i = p.indexOf('=');
+    if (i > -1) out[p.slice(0, i).trim()] = decodeURIComponent(p.slice(i + 1).trim());
+  });
+  return out;
+}
+function setSessionCookie(req, res, token, maxAgeSec) {
+  const secure = req.headers['x-forwarded-proto'] === 'https' ? ' Secure;' : '';
+  res.setHeader(
+    'Set-Cookie',
+    `${SESSION_COOKIE}=${token}; HttpOnly; Path=/; SameSite=Lax; Max-Age=${maxAgeSec};${secure}`
+  );
+}
+function requireAuth(req, res, next) {
+  const payload = verifyToken(parseCookies(req)[SESSION_COOKIE]);
+  if (!payload) return res.status(401).json({ ok: false, error: 'Not authenticated' });
+  req.admin = payload;
+  next();
+}
 
 // --- Helpers ---
 function normalizePhone(raw) {
@@ -152,13 +208,33 @@ app.post('/webhook/meta', (req, res) => {
   res.sendStatus(200);
 });
 
-// ================= Admin API =================
-app.get('/api/entries', (req, res) => {
+// ================= Admin auth API =================
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body || {};
+  if (username === ADMIN_USER && password === ADMIN_PASS) {
+    const token = signToken({ u: username, exp: Date.now() + SESSION_TTL_MS });
+    setSessionCookie(req, res, token, SESSION_TTL_MS / 1000);
+    return res.json({ ok: true });
+  }
+  res.status(401).json({ ok: false, error: 'Invalid username or password' });
+});
+
+app.post('/api/logout', (req, res) => {
+  setSessionCookie(req, res, '', 0);
+  res.json({ ok: true });
+});
+
+app.get('/api/me', requireAuth, (req, res) => {
+  res.json({ ok: true, user: req.admin.u });
+});
+
+// ================= Admin API (protected) =================
+app.get('/api/entries', requireAuth, (req, res) => {
   const db = loadDB();
   res.json({ count: db.entries.length, entries: db.entries.slice().reverse() });
 });
 
-app.delete('/api/entries/:id', (req, res) => {
+app.delete('/api/entries/:id', requireAuth, (req, res) => {
   const db = loadDB();
   const before = db.entries.length;
   db.entries = db.entries.filter((e) => e.id !== req.params.id);
@@ -167,7 +243,7 @@ app.delete('/api/entries/:id', (req, res) => {
 });
 
 // Pick a random winner
-app.post('/api/winner', (req, res) => {
+app.post('/api/winner', requireAuth, (req, res) => {
   const db = loadDB();
   const pool = db.entries;
   if (pool.length === 0) return res.status(400).json({ ok: false, error: 'No entries yet' });
@@ -178,7 +254,7 @@ app.post('/api/winner', (req, res) => {
   res.json({ ok: true, winner: record });
 });
 
-app.get('/api/winners', (req, res) => {
+app.get('/api/winners', requireAuth, (req, res) => {
   const db = loadDB();
   res.json({ winners: db.winners.slice().reverse() });
 });

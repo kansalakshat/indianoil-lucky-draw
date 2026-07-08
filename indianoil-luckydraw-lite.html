@@ -33,6 +33,23 @@ a{text-decoration:none; color:inherit;}
 button{font-family:inherit; cursor:pointer;}
 :focus-visible{outline:2px solid var(--io-orange-500); outline-offset:2px;}
 
+/* ===== LOGIN ===== */
+#login-view{min-height:100vh; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;
+  background:radial-gradient(circle at 15% 15%, rgba(245,130,31,0.22), transparent 42%), radial-gradient(circle at 85% 85%, rgba(22,98,181,0.45), transparent 48%), linear-gradient(160deg,var(--io-blue-900),#03142B 80%);}
+#login-view.hide{display:none;}
+#login-view::before{content:''; position:absolute; width:480px;height:480px; border:1px solid rgba(255,255,255,0.07); border-radius:50%; top:-160px; left:-140px;}
+#login-view::after{content:''; position:absolute; width:340px;height:340px; border:1px solid rgba(255,255,255,0.07); border-radius:50%; bottom:-120px; right:-100px;}
+.login-card{position:relative; z-index:2; width:380px; background:#fff; border-radius:22px; padding:38px 34px; box-shadow:var(--shadow-lg);}
+.login-mark{width:56px;height:56px;border-radius:15px; background:linear-gradient(135deg,var(--io-orange-500),var(--io-orange-600)); display:flex; align-items:center; justify-content:center; margin:0 auto 18px; box-shadow:0 10px 26px rgba(245,130,31,0.4);}
+.login-mark svg{width:28px;height:28px;}
+.login-card h1{text-align:center; font-size:19px; font-weight:700; margin-bottom:4px;}
+.login-card .sub{text-align:center; font-size:12.5px; color:var(--ink-600); margin-bottom:26px;}
+.field{margin-bottom:16px;}
+.field label{display:block; font-size:12px; font-weight:600; color:var(--ink-700); margin-bottom:6px;}
+.field input,.field select,.field textarea{width:100%; padding:11px 13px; border-radius:11px; border:1px solid var(--border); font-size:13px; font-family:inherit; outline:none; background:#FBFCFE; transition:border-color .15s, background .15s;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--io-orange-500); background:#fff;}
+.login-foot{text-align:center; margin-top:16px; font-size:11px; color:var(--ink-400);}
+
 /* ===== BUTTONS ===== */
 .btn{display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:600; padding:10px 16px; border-radius:10px; border:1px solid transparent; transition:all .15s;}
 .btn svg{width:15px;height:15px;}
@@ -110,7 +127,7 @@ button{font-family:inherit; cursor:pointer;}
 
 /* ===== TABLE ===== */
 .table-wrap{overflow-x:auto; border-radius:14px; border:1px solid var(--border);}
-table{width:100%; border-collapse:collapse; font-size:13px; min-width:760px;}
+table{width:100%; border-collapse:collapse; font-size:13px; min-width:820px;}
 thead th{background:var(--io-blue-50); color:var(--io-blue-800); font-weight:700; text-align:left; padding:13px 16px; font-size:11px; text-transform:uppercase; letter-spacing:.04em; white-space:nowrap; border-bottom:1px solid var(--border);}
 tbody td{padding:13px 16px; border-bottom:1px solid var(--border); color:var(--ink-700); white-space:nowrap;}
 tbody tr{transition:background .12s;}
@@ -125,13 +142,6 @@ th.sortable .arrows{opacity:.4; margin-left:3px;}
 .st-duplicate{background:var(--warning-bg); color:var(--warning);} .st-duplicate::before{background:var(--warning);}
 .st-claimed{background:var(--success-bg); color:var(--success);} .st-claimed::before{background:var(--success);}
 .st-pending{background:var(--warning-bg); color:var(--warning);} .st-pending::before{background:var(--warning);}
-/* source chips */
-.st-web{background:var(--io-blue-100); color:var(--io-blue-800);} .st-web::before{background:var(--io-blue-700);}
-.st-sms{background:var(--io-orange-100); color:var(--io-orange-600);} .st-sms::before{background:var(--io-orange-500);}
-.st-whatsapp{background:var(--success-bg); color:var(--success);} .st-whatsapp::before{background:var(--success);}
-.row-del{background:none; border:none; color:var(--ink-400); padding:4px; border-radius:7px; display:inline-flex;}
-.row-del:hover{color:var(--danger); background:var(--danger-bg);}
-.row-del svg{width:15px;height:15px;}
 
 .table-toolbar{display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap;}
 .search-bar{display:flex; align-items:center; gap:9px; background:var(--bg); border:1px solid var(--border); border-radius:11px; padding:9px 14px; color:var(--ink-400); flex:1; max-width:280px;}
@@ -140,7 +150,9 @@ th.sortable .arrows{opacity:.4; margin-left:3px;}
 .filter-chip{display:flex; align-items:center; gap:7px; padding:9px 13px; border-radius:10px; border:1px solid var(--border); background:#fff; font-size:12.5px; font-weight:500; color:var(--ink-600); white-space:nowrap;}
 .filter-chip svg{width:14px;height:14px;}
 .pagination{display:flex; align-items:center; justify-content:space-between; margin-top:16px; font-size:12.5px; color:var(--ink-600);}
-.empty-row td{text-align:center; color:var(--ink-400); padding:40px; font-size:14px;}
+.page-btns{display:flex; gap:5px;}
+.page-btns button{width:30px;height:30px; border-radius:8px; border:1px solid var(--border); background:#fff; font-size:12px; font-weight:600; color:var(--ink-600);}
+.page-btns button.active{background:var(--io-blue-800); color:#fff; border-color:var(--io-blue-800);}
 
 /* ===== LUCKY DRAW ===== */
 #luckydraw-stage{border-radius:26px; overflow:hidden; position:relative; min-height:660px; background:
@@ -189,33 +201,51 @@ th.sortable .arrows{opacity:.4; margin-left:3px;}
 .receipt-card::before,.receipt-card::after{content:''; position:absolute; width:22px; height:22px; background:var(--io-blue-900); border-radius:50%; top:50%; margin-top:-11px;}
 .receipt-card::before{left:-11px;} .receipt-card::after{right:-11px;}
 .receipt-title{text-align:center; font-family:'JetBrains Mono'; font-weight:700; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--io-orange-600); border-bottom:1px dashed var(--border); padding-bottom:14px; margin-bottom:14px;}
-.receipt-row{display:flex; justify-content:space-between; font-size:12.8px; padding:7px 0; font-family:'JetBrains Mono'; border-bottom:1px dashed #F0F2F6; gap:16px;}
+.receipt-row{display:flex; justify-content:space-between; font-size:12.8px; padding:7px 0; font-family:'JetBrains Mono'; border-bottom:1px dashed #F0F2F6;}
 .receipt-row .k{color:var(--ink-400);}
-.receipt-row .v{font-weight:700; color:var(--ink-900); text-align:right;}
+.receipt-row .v{font-weight:700; color:var(--ink-900);}
 .winner-actions{display:flex; gap:10px; margin-top:22px; justify-content:center;}
 
 #confetti-canvas{position:fixed; inset:0; pointer-events:none; z-index:200;}
 
 /* ===== SETTINGS ===== */
 .settings-form{max-width:640px;}
-.field{margin-bottom:16px;}
-.field label{display:block; font-size:12px; font-weight:600; color:var(--ink-700); margin-bottom:6px;}
-.field input{width:100%; padding:11px 13px; border-radius:11px; border:1px solid var(--border); font-size:13px; font-family:inherit; outline:none; background:#FBFCFE; transition:border-color .15s, background .15s;}
-.field input:focus{border-color:var(--io-orange-500); background:#fff;}
 .field-hint{font-size:11px; color:var(--ink-400); margin-top:5px;}
+.logo-upload{display:flex; align-items:center; gap:16px;}
+.logo-preview{width:64px;height:64px;border-radius:14px; background:linear-gradient(135deg,var(--io-orange-500),var(--io-orange-600)); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.logo-preview svg{width:30px;height:30px;}
+.toggle{width:44px; height:25px; border-radius:20px; background:var(--border); position:relative; flex-shrink:0; transition:background .2s; border:none;}
+.toggle::after{content:''; position:absolute; width:19px;height:19px; border-radius:50%; background:#fff; top:3px; left:3px; box-shadow:0 1px 3px rgba(0,0,0,0.3); transition:left .2s;}
+.toggle.on{background:var(--success);}
+.toggle.on::after{left:22px;}
+.setting-row{display:flex; align-items:center; justify-content:space-between; padding:18px 0; border-bottom:1px solid var(--border);}
+.setting-row:last-child{border-bottom:none;}
+.setting-row .t{font-size:14px; font-weight:600;}
+.setting-row .d{font-size:12px; color:var(--ink-600); margin-top:2px; max-width:420px;}
 .settings-section-title{font-size:13px; font-weight:700; color:var(--ink-900); margin:28px 0 4px; padding-top:4px;}
 .settings-section-title:first-child{margin-top:0;}
-
-@media (max-width:760px){
-  .sidebar{display:none;}
-  .kpi-grid{grid-template-columns:repeat(2,1fr);}
-}
 </style>
 </head>
 <body>
 
+<!-- ============================================================= LOGIN ============================================================= -->
+<div id="login-view">
+  <div class="login-card">
+    <div class="login-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22h12"/><path d="M6 18V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v14"/><path d="M6 12h8"/><path d="M18 8h.01"/><path d="M15 6l4.5-2A1 1 0 0 1 21 5v9a2 2 0 0 1-2 2h-.5"/></svg></div>
+    <h1>IndianOil Lucky Draw</h1>
+    <div class="sub">Operator Console &nbsp;·&nbsp; Sign in to continue</div>
+    <div class="field"><label>Operator ID</label><input value="IOC-OP-1001"></div>
+    <div class="field"><label>Password</label><input type="password" value="••••••••••"></div>
+    <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;" onclick="doLogin()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+      Sign In
+    </button>
+    <div class="login-foot">© 2026 Indian Oil Corporation Limited · Internal Use Only</div>
+  </div>
+</div>
+
 <!-- ============================================================= APP SHELL ============================================================= -->
-<div id="app" class="active">
+<div id="app">
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22h12"/><path d="M6 18V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v14"/><path d="M6 12h8"/><path d="M18 8h.01"/><path d="M15 6l4.5-2A1 1 0 0 1 21 5v9a2 2 0 0 1-2 2h-.5"/></svg></div>
@@ -230,8 +260,8 @@ th.sortable .arrows{opacity:.4; margin-left:3px;}
     </div>
     <div class="sidebar-foot">
       <div class="op-pill">
-        <div class="op-avatar">AD</div>
-        <div class="op-meta"><div class="n">Administrator</div><div class="r" id="op-id">admin@indianoil.org</div></div>
+        <div class="op-avatar">OP</div>
+        <div class="op-meta"><div class="n">Operator</div><div class="r">IOC-OP-1001</div></div>
         <button onclick="doLogout()" title="Sign out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
       </div>
     </div>
@@ -242,11 +272,11 @@ th.sortable .arrows{opacity:.4; margin-left:3px;}
       <h2 id="topbar-title">Dashboard</h2>
       <div class="sms-indicator">
         <span class="dot"></span>
-        <div class="txt"><div class="l">Last Entry Received</div><div class="v" id="last-entry">—</div></div>
+        <div class="txt"><div class="l">Last SMS Received</div><div class="v">11:42 AM Today</div></div>
       </div>
       <div class="topbar-right">
-        <button class="icon-btn spin-on-click" title="Refresh" onclick="loadAll()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
-        <a class="btn btn-ghost btn-sm" href="index.html" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Entry</a>
+        <button class="icon-btn spin-on-click" title="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
+        <button class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
       </div>
     </div>
 
@@ -255,23 +285,24 @@ th.sortable .arrows{opacity:.4; margin-left:3px;}
       <!-- ============================================================= DASHBOARD ============================================================= -->
       <section class="view active" id="view-dashboard">
         <div class="page-head">
-          <div><div class="eyebrow">Overview</div><h1>Welcome back, Administrator</h1><p>Here's a live snapshot of the IndianOil lucky draw campaign activity.</p></div>
+          <div><div class="eyebrow">Overview</div><h1>Welcome back, Operator</h1><p>Here's a quick snapshot of today's lucky draw campaign activity.</p></div>
         </div>
 
         <div class="kpi-grid">
-          <div class="kpi-card"><div class="kpi-icon" style="background:var(--io-blue-50); color:var(--io-blue-700);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16"/></svg></div><div><div class="kpi-val" id="kpi-total">0</div><div class="kpi-label">Total Entries</div></div></div>
-          <div class="kpi-card"><div class="kpi-icon" style="background:var(--io-orange-100); color:var(--io-orange-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="kpi-val" id="kpi-today">0</div><div class="kpi-label">Today's Entries</div></div></div>
-          <div class="kpi-card"><div class="kpi-icon" style="background:var(--success-bg); color:var(--success);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div><div><div class="kpi-val" id="kpi-valid">0</div><div class="kpi-label">Valid Entries</div></div></div>
-          <div class="kpi-card"><div class="kpi-icon" style="background:var(--warning-bg); color:var(--warning);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M6 4h12v6a6 6 0 0 1-12 0V4z"/></svg></div><div><div class="kpi-val" id="kpi-winners">0</div><div class="kpi-label">Total Winners</div></div></div>
+          <div class="kpi-card"><div class="kpi-icon" style="background:var(--io-blue-50); color:var(--io-blue-700);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16"/></svg></div><div><div class="kpi-val">18,942</div><div class="kpi-label">Total Entries</div></div></div>
+          <div class="kpi-card"><div class="kpi-icon" style="background:var(--io-orange-100); color:var(--io-orange-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="kpi-val">642</div><div class="kpi-label">Today's Entries</div></div></div>
+          <div class="kpi-card"><div class="kpi-icon" style="background:var(--success-bg); color:var(--success);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div><div><div class="kpi-val">17,880</div><div class="kpi-label">Valid Entries</div></div></div>
+          <div class="kpi-card"><div class="kpi-icon" style="background:var(--warning-bg); color:var(--warning);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M6 4h12v6a6 6 0 0 1-12 0V4z"/></svg></div><div><div class="kpi-val">14</div><div class="kpi-label">Total Winners</div></div></div>
         </div>
 
         <div class="card card-pad">
           <div class="table-toolbar">
-            <div class="search-bar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="dash-search" placeholder="Search name, mobile or bill…"></div>
-            <button class="icon-btn spin-on-click" style="margin-left:auto;" title="Refresh" onclick="loadAll()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
+            <div class="search-bar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input placeholder="Search mobile or bill number…"></div>
+            <button class="filter-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>Today</button>
+            <button class="icon-btn spin-on-click" style="margin-left:auto;" title="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
           </div>
           <div class="table-wrap"><table>
-            <thead><tr><th>Received</th><th>Name</th><th>Mobile Number</th><th>Bill Number</th><th>Source</th></tr></thead>
+            <thead><tr><th>Time</th><th>Mobile Number</th><th>Bill Number</th><th>Fuel Amount</th><th>Petrol Pump</th><th>Status</th></tr></thead>
             <tbody id="dash-entries-body"></tbody>
           </table></div>
         </div>
@@ -280,21 +311,32 @@ th.sortable .arrows{opacity:.4; margin-left:3px;}
       <!-- ============================================================= ENTRIES ============================================================= -->
       <section class="view" id="view-entries">
         <div class="page-head">
-          <div><div class="eyebrow">All Records</div><h1>Entries</h1><p>Every entry received via web form, SMS and WhatsApp for the current campaign.</p></div>
+          <div><div class="eyebrow">All Records</div><h1>Entries</h1><p>Every SMS entry received for the current lucky draw campaign.</p></div>
+          <div class="head-actions">
+            <button class="btn btn-ghost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export Excel</button>
+            <button class="btn btn-ghost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print</button>
+          </div>
         </div>
         <div class="card card-pad">
           <div class="table-toolbar">
-            <div class="search-bar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="entries-search" placeholder="Search name, mobile or bill…"></div>
-            <button class="icon-btn spin-on-click" style="margin-left:auto;" title="Refresh" onclick="loadAll()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
+            <div class="search-bar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input placeholder="Search mobile or bill number…"></div>
+            <button class="filter-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>Status: All</button>
+            <button class="filter-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>Fuel Type: All</button>
+            <button class="filter-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>Date Range</button>
           </div>
           <div class="table-wrap"><table>
             <thead><tr>
-              <th>Entry ID</th><th>Received</th><th>Name</th><th>Mobile Number</th><th>Bill Number</th><th>Source</th><th></th>
+              <th class="sortable">Entry ID <span class="arrows">↕</span></th>
+              <th class="sortable">Time <span class="arrows">↕</span></th>
+              <th>Mobile Number</th><th>Bill Number</th>
+              <th class="sortable">Fuel Amount <span class="arrows">↕</span></th>
+              <th>Fuel Type</th><th>Petrol Pump</th><th>City</th><th>Status</th>
             </tr></thead>
             <tbody id="entries-body"></tbody>
           </table></div>
           <div class="pagination">
-            <span id="entries-count">Showing 0 entries</span>
+            <span>Showing 1–14 of 18,942 entries</span>
+            <div class="page-btns"><button>‹</button><button class="active">1</button><button>2</button><button>3</button><button>…</button><button>1353</button><button>›</button></div>
           </div>
         </div>
       </section>
@@ -302,9 +344,9 @@ th.sortable .arrows{opacity:.4; margin-left:3px;}
       <!-- ============================================================= LUCKY DRAW ============================================================= -->
       <section class="view" id="view-luckydraw">
         <div class="page-head">
-          <div><div class="eyebrow">Main Draw Event</div><h1>Lucky Draw</h1><p>Select the winner using a fair, secure random draw.</p></div>
+          <div><div class="eyebrow">Main Draw Event</div><h1>Lucky Draw</h1><p>Select today's winner using a fair, secure random draw.</p></div>
           <div class="head-actions">
-            <span class="filter-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/></svg><span id="eligible-count">0</span>&nbsp;valid entries eligible</span>
+            <span class="filter-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/></svg>17,880 valid entries eligible</span>
           </div>
         </div>
 
@@ -312,7 +354,7 @@ th.sortable .arrows{opacity:.4; margin-left:3px;}
           <div id="ld-idle">
             <div class="ld-badge"><span class="dot"></span>Entries Locked for This Draw</div>
             <h2 class="ld-title">Ready to select the winner</h2>
-            <p class="ld-sub">Every valid entry has an exactly equal chance — the winner is chosen by a secure, verifiable random draw on the server.</p>
+            <p class="ld-sub">New entries are paused while the draw runs. Every valid entry has an exactly equal chance — the winner is chosen by a secure, verifiable random draw.</p>
 
             <div class="led-display">
               <div class="led-label">Scanning Entries</div>
@@ -320,7 +362,7 @@ th.sortable .arrows{opacity:.4; margin-left:3px;}
                 <div class="led-col"><div class="led-number" id="ledBill">IOC-••••••••</div></div>
                 <div class="led-col" style="text-align:right;"><div class="led-number small" id="ledMobile">9••••••••</div></div>
               </div>
-              <div class="led-sub-row"><span>STATUS: STANDBY</span><span id="ledCounter">0 / 0 SCANNED</span></div>
+              <div class="led-sub-row"><span>STATUS: STANDBY</span><span id="ledCounter">0 / 17,880 SCANNED</span></div>
             </div>
 
             <button class="ld-start-btn" id="startBtn" onclick="startDraw()">
@@ -333,7 +375,7 @@ th.sortable .arrows{opacity:.4; margin-left:3px;}
 
             <div class="ld-progress-row">
               <div class="p"><div class="v">1</div><div class="l">Winner this round</div></div>
-              <div class="p"><div class="v">Server-side</div><div class="l">Random pick</div></div>
+              <div class="p"><div class="v">One per customer</div><div class="l">Duplicate rule</div></div>
               <div class="p"><div class="v">Auto-saved</div><div class="l">To Winners page</div></div>
             </div>
           </div>
@@ -341,17 +383,17 @@ th.sortable .arrows{opacity:.4; margin-left:3px;}
           <div class="winner-reveal" id="ld-winner">
             <div class="winner-trophy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M6 4h12v6a6 6 0 0 1-12 0V4z"/><path d="M12 16v4M8 22h8"/></svg></div>
             <h2 class="ld-title" style="margin-bottom:4px;">🎉 Congratulations!</h2>
-            <p class="ld-sub" style="margin-bottom:20px;" id="winner-sub">Winner selected fairly from all eligible entries.</p>
+            <p class="ld-sub" style="margin-bottom:20px;">Winner selected fairly from 17,880 eligible entries.</p>
             <div class="receipt-card">
               <div class="receipt-title">★ IndianOil Lucky Draw · Winner Slip ★</div>
-              <div class="receipt-row"><span class="k">Name</span><span class="v" id="wName">—</span></div>
               <div class="receipt-row"><span class="k">Bill Number</span><span class="v" id="wBill">—</span></div>
               <div class="receipt-row"><span class="k">Mobile Number</span><span class="v" id="wMobile">—</span></div>
-              <div class="receipt-row"><span class="k">Source</span><span class="v" id="wSource">—</span></div>
+              <div class="receipt-row"><span class="k">Fuel Amount</span><span class="v" id="wAmount">—</span></div>
+              <div class="receipt-row"><span class="k">Petrol Pump</span><span class="v" id="wPump">—</span></div>
               <div class="receipt-row"><span class="k">Date &amp; Time</span><span class="v" id="wTime">—</span></div>
             </div>
             <div class="winner-actions">
-              <button class="btn btn-ghost" style="background:rgba(255,255,255,0.9);" onclick="resetDraw()">Draw Again</button>
+              <button class="btn btn-ghost" style="background:rgba(255,255,255,0.9);" onclick="resetDraw()">Close</button>
               <button class="btn btn-primary" onclick="goToWinners()">View in Winners →</button>
             </div>
           </div>
@@ -362,10 +404,14 @@ th.sortable .arrows{opacity:.4; margin-left:3px;}
       <section class="view" id="view-winners">
         <div class="page-head">
           <div><div class="eyebrow">Draw History</div><h1>Winners</h1><p>Complete record of every winner selected, with full audit timestamp.</p></div>
+          <div class="head-actions">
+            <button class="btn btn-ghost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export Excel</button>
+            <button class="btn btn-ghost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print</button>
+          </div>
         </div>
         <div class="card card-pad">
           <div class="table-wrap"><table>
-            <thead><tr><th>Winner No.</th><th>Name</th><th>Mobile Number</th><th>Bill Number</th><th>Source</th><th>Draw Date</th><th>Status</th></tr></thead>
+            <thead><tr><th>Winner No.</th><th>Mobile Number</th><th>Bill Number</th><th>Fuel Amount</th><th>Petrol Pump</th><th>Draw Date</th><th>Prize Status</th></tr></thead>
             <tbody id="winners-body"></tbody>
           </table></div>
         </div>
@@ -373,16 +419,28 @@ th.sortable .arrows{opacity:.4; margin-left:3px;}
 
       <!-- ============================================================= SETTINGS ============================================================= -->
       <section class="view" id="view-settings">
-        <div class="page-head"><div><div class="eyebrow">Configuration</div><h1>Settings</h1><p>Campaign and channel details for this console.</p></div></div>
+        <div class="page-head"><div><div class="eyebrow">Configuration</div><h1>Settings</h1><p>Basic campaign and draw configuration for this console.</p></div></div>
         <div class="card card-pad">
           <div class="settings-form">
             <div class="settings-section-title">Campaign</div>
-            <div class="field"><label>Campaign Name</label><input value="IndianOil Lucky Draw 2026"></div>
-            <div class="settings-section-title">Intake Channels</div>
-            <div class="field"><label>Web Form</label><input value="/  (public registration page)" class="mono" readonly><div class="field-hint">Customers register at the site root.</div></div>
-            <div class="field"><label>SMS / WhatsApp (Twilio)</label><input value="POST /webhook/sms  ·  POST /webhook/whatsapp" class="mono" readonly><div class="field-hint">Point your Twilio number's inbound webhook here.</div></div>
-            <div class="field"><label>WhatsApp (Meta Cloud API)</label><input value="GET/POST /webhook/meta" class="mono" readonly><div class="field-hint">Verify token: indianoil-verify (set META_VERIFY_TOKEN to change).</div></div>
-            <div class="field-hint" style="margin-top:8px;">Message format people send: <b>Name, Phone, Bill No.</b> — e.g. <span class="mono">Akshat Kansal, 9876543210, INV-2201</span></div>
+            <div class="field"><label>Campaign Name</label><input value="Monsoon Miles Lucky Draw 2026"></div>
+            <div class="field"><label>SMS Number</label><input value="56767" class="mono"><div class="field-hint">Customers send their bill number to this short code.</div></div>
+
+            <div class="settings-section-title">Branding</div>
+            <div class="field">
+              <label>Company Logo</label>
+              <div class="logo-upload">
+                <div class="logo-preview"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 22h12M6 18V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v14M6 12h8"/></svg></div>
+                <button class="btn btn-ghost btn-sm">Upload New Logo</button>
+              </div>
+            </div>
+
+            <div class="settings-section-title">Draw Rules</div>
+            <div class="setting-row"><div><div class="t">Lucky Draw Enabled</div><div class="d">Turn off to pause the draw and stop accepting new SMS entries.</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="setting-row"><div><div class="t">One Prize per Customer</div><div class="d">Prevent a mobile number from winning more than once in this campaign.</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="field" style="margin-top:16px;"><label>Minimum Bill Amount (₹)</label><input value="500"></div>
+
+            <div style="margin-top:8px;"><button class="btn btn-primary">Save Settings</button></div>
           </div>
         </div>
       </section>
@@ -394,27 +452,48 @@ th.sortable .arrows{opacity:.4; margin-left:3px;}
 <canvas id="confetti-canvas"></canvas>
 
 <script>
-/* ================= STATE ================= */
-let ENTRIES = [];
-let WINNERS = [];
-
-/* ================= HELPERS ================= */
-function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
-function fmt(iso){const d=new Date(iso); return d.toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'});}
-function isToday(iso){const d=new Date(iso),n=new Date(); return d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth()&&d.getDate()===n.getDate();}
-function sourceChip(s){const cls={web:'st-web',sms:'st-sms',whatsapp:'st-whatsapp'}[s]||'st-web'; return `<span class="status-chip ${cls}">${esc(s||'web')}</span>`;}
-
-/* Any admin request that returns 401 => bounce to login. */
-async function api(url,opts){
-  const res=await fetch(url,opts);
-  if(res.status===401){window.location.href='/login.html'; throw new Error('unauthorized');}
-  return res;
+/* ================= MOCK DATA ================= */
+const PUMPS=['Kaveri Fuels, Andheri E.','Highway Star Filling Station, Pune','Sunrise IOC Outlet, Nashik','National Fuel Point, Thane','Green Mile Petroleum, Nagpur','Om Sai Fuels, Kalyan'];
+const FUELS=['Petrol','Diesel','Premium Petrol'];
+const CITIES=['Mumbai','Pune','Nashik','Thane','Nagpur','Kalyan'];
+const STATUS_LIST=['Valid','Valid','Valid','Valid','Invalid','Duplicate'];
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function pick(arr){return arr[rand(0,arr.length-1)];}
+function maskMobile(){return '9'+rand(1000000,9999999)+'••'+rand(10,99);}
+function randBill(){return 'IOC-'+rand(1000,9999)+'-'+rand(1000,9999)+'-'+rand(10,99);}
+function genEntry(i){
+  return{
+    id:'ENT-'+String(50000+i),
+    time:`${String(rand(6,22)).padStart(2,'0')}:${String(rand(0,59)).padStart(2,'0')}`,
+    mobile:maskMobile(), bill:randBill(),
+    amount:'₹'+rand(400,2600).toLocaleString('en-IN'),
+    fuel:pick(FUELS), pump:pick(PUMPS), city:pick(CITIES),
+    status:pick(STATUS_LIST)
+  };
 }
+const ENTRIES=Array.from({length:14},(_,i)=>genEntry(i));
+function statusChip(s){const m={Valid:'st-valid',Invalid:'st-invalid',Duplicate:'st-duplicate'};return `<span class="status-chip ${m[s]}">${s}</span>`;}
 
-async function doLogout(){
-  try{await fetch('/api/logout',{method:'POST'});}catch(e){}
-  window.location.href='/login.html';
+document.getElementById('dash-entries-body').innerHTML=ENTRIES.map(e=>`
+  <tr><td class="mono">${e.time}</td><td class="mono">${e.mobile}</td><td class="mono">${e.bill}</td><td>${e.amount}</td><td>${e.pump}</td><td>${statusChip(e.status)}</td></tr>`).join('');
+
+document.getElementById('entries-body').innerHTML=ENTRIES.map(e=>`
+  <tr><td class="mono">${e.id}</td><td class="mono">${e.time}</td><td class="mono">${e.mobile}</td><td class="mono">${e.bill}</td><td>${e.amount}</td><td>${e.fuel}</td><td>${e.pump}</td><td>${e.city}</td><td>${statusChip(e.status)}</td></tr>`).join('');
+
+/* ================= WINNERS ================= */
+const WINNERS=[
+  {no:'WIN-014',mobile:'98221••412',bill:'IOC-7749-2201-88',amount:'₹1,240',pump:'Kaveri Fuels, Andheri E.',date:'07 Jul 2026, 6:42 PM',status:'Claimed'},
+  {no:'WIN-013',mobile:'93012••190',bill:'IOC-5521-9081-14',amount:'₹860',pump:'Highway Star Filling Station, Pune',date:'06 Jul 2026, 11:05 AM',status:'Claimed'},
+  {no:'WIN-012',mobile:'87654••321',bill:'IOC-2201-4471-09',amount:'₹1,510',pump:'Sunrise IOC Outlet, Nashik',date:'05 Jul 2026, 4:18 PM',status:'Pending'},
+  {no:'WIN-011',mobile:'99887••554',bill:'IOC-8871-1120-77',amount:'₹720',pump:'National Fuel Point, Thane',date:'04 Jul 2026, 2:37 PM',status:'Claimed'},
+  {no:'WIN-010',mobile:'90011••882',bill:'IOC-3345-7712-02',amount:'₹1,980',pump:'Green Mile Petroleum, Nagpur',date:'03 Jul 2026, 9:14 AM',status:'Pending'},
+];
+function prizeChip(s){return `<span class="status-chip ${s==='Claimed'?'st-claimed':'st-pending'}">${s}</span>`;}
+function renderWinners(){
+  document.getElementById('winners-body').innerHTML=WINNERS.map(w=>`
+    <tr><td class="mono">${w.no}</td><td class="mono">${w.mobile}</td><td class="mono">${w.bill}</td><td>${w.amount}</td><td>${w.pump}</td><td>${w.date}</td><td>${prizeChip(w.status)}</td></tr>`).join('');
 }
+renderWinners();
 
 /* ================= NAVIGATION ================= */
 const TITLES={dashboard:'Dashboard',entries:'Entries',luckydraw:'Lucky Draw',winners:'Winners',settings:'Settings'};
@@ -428,109 +507,12 @@ function showView(name){
 }
 document.querySelectorAll('.nav-item').forEach(item=>item.addEventListener('click',()=>showView(item.dataset.view)));
 
-/* ================= DATA LOADING ================= */
-async function loadAll(){
-  try{
-    const [eRes,wRes]=await Promise.all([
-      api('/api/entries').then(r=>r.json()),
-      api('/api/winners').then(r=>r.json()),
-    ]);
-    ENTRIES=eRes.entries||[];
-    WINNERS=wRes.winners||[];
-    renderKpis();
-    renderDashboard();
-    renderEntries();
-    renderWinners();
-    renderLuckyMeta();
-    renderLastEntry();
-  }catch(e){/* 401 already redirected */}
-}
+/* ================= LOGIN ================= */
+function doLogin(){document.getElementById('login-view').classList.add('hide'); document.getElementById('app').classList.add('active');}
+function doLogout(){document.getElementById('app').classList.remove('active'); document.getElementById('login-view').classList.remove('hide');}
 
-function renderKpis(){
-  document.getElementById('kpi-total').textContent=ENTRIES.length.toLocaleString('en-IN');
-  document.getElementById('kpi-today').textContent=ENTRIES.filter(e=>isToday(e.createdAt)).length.toLocaleString('en-IN');
-  document.getElementById('kpi-valid').textContent=ENTRIES.length.toLocaleString('en-IN');
-  document.getElementById('kpi-winners').textContent=WINNERS.length.toLocaleString('en-IN');
-}
-
-function renderLastEntry(){
-  const el=document.getElementById('last-entry');
-  if(!ENTRIES.length){el.textContent='No entries yet'; return;}
-  el.textContent=new Date(ENTRIES[0].createdAt).toLocaleString('en-IN',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'short'});
-}
-
-function filterList(term){
-  term=(term||'').trim().toLowerCase();
-  if(!term) return ENTRIES;
-  return ENTRIES.filter(e=>
-    (e.name||'').toLowerCase().includes(term)||
-    (e.phone||'').toLowerCase().includes(term)||
-    (e.bill||'').toLowerCase().includes(term));
-}
-
-function renderDashboard(){
-  const body=document.getElementById('dash-entries-body');
-  const list=filterList(document.getElementById('dash-search').value).slice(0,10);
-  if(!list.length){body.innerHTML=`<tr class="empty-row"><td colspan="5">No entries yet. Share the registration link or SMS/WhatsApp number.</td></tr>`; return;}
-  body.innerHTML=list.map(e=>`
-    <tr>
-      <td class="mono">${esc(fmt(e.createdAt))}</td>
-      <td><b>${esc(e.name)}</b></td>
-      <td class="mono">${esc(e.phone)}</td>
-      <td class="mono">${esc(e.bill)}</td>
-      <td>${sourceChip(e.source)}</td>
-    </tr>`).join('');
-}
-
-function renderEntries(){
-  const body=document.getElementById('entries-body');
-  const list=filterList(document.getElementById('entries-search').value);
-  document.getElementById('entries-count').textContent=`Showing ${list.length} of ${ENTRIES.length} entries`;
-  if(!list.length){body.innerHTML=`<tr class="empty-row"><td colspan="7">No matching entries.</td></tr>`; return;}
-  body.innerHTML=list.map(e=>`
-    <tr>
-      <td class="mono">ENT-${esc(String(e.id).slice(0,6)).toUpperCase()}</td>
-      <td class="mono">${esc(fmt(e.createdAt))}</td>
-      <td><b>${esc(e.name)}</b></td>
-      <td class="mono">${esc(e.phone)}</td>
-      <td class="mono">${esc(e.bill)}</td>
-      <td>${sourceChip(e.source)}</td>
-      <td><button class="row-del" title="Remove entry" onclick="del('${esc(e.id)}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></td>
-    </tr>`).join('');
-}
-
-function renderWinners(){
-  const body=document.getElementById('winners-body');
-  if(!WINNERS.length){body.innerHTML=`<tr class="empty-row"><td colspan="7">No winners drawn yet. Run a draw from the Lucky Draw page.</td></tr>`; return;}
-  const n=WINNERS.length;
-  body.innerHTML=WINNERS.map((w,i)=>`
-    <tr>
-      <td class="mono">WIN-${String(n-i).padStart(3,'0')}</td>
-      <td><b>${esc(w.name)}</b></td>
-      <td class="mono">${esc(w.phone)}</td>
-      <td class="mono">${esc(w.bill)}</td>
-      <td>${sourceChip(w.source)}</td>
-      <td>${esc(fmt(w.wonAt))}</td>
-      <td><span class="status-chip st-claimed">Selected</span></td>
-    </tr>`).join('');
-}
-
-function renderLuckyMeta(){
-  document.getElementById('eligible-count').textContent=ENTRIES.length.toLocaleString('en-IN');
-  const c=document.getElementById('ledCounter');
-  if(c.textContent.includes('SCANNED')) c.textContent=`0 / ${ENTRIES.length.toLocaleString('en-IN')} SCANNED`;
-}
-
-document.getElementById('dash-search').addEventListener('input',renderDashboard);
-document.getElementById('entries-search').addEventListener('input',renderEntries);
-
-async function del(id){
-  if(!confirm('Remove this entry?')) return;
-  await api('/api/entries/'+id,{method:'DELETE'});
-  loadAll();
-}
-
-/* ================= LUCKY DRAW ================= */
+/* ================= LUCKY DRAW LOGIC ================= */
+let winnerCount=WINNERS.length;
 function fireConfetti(){
   const canvas=document.getElementById('confetti-canvas');
   const myConfetti=confetti.create(canvas,{resize:true,useWorker:true});
@@ -538,77 +520,54 @@ function fireConfetti(){
   setTimeout(()=>myConfetti({particleCount:90,spread:120,origin:{y:0.3,x:0.15},colors:['#F5821F','#0A3D7A']}),250);
   setTimeout(()=>myConfetti({particleCount:90,spread:120,origin:{y:0.3,x:0.85},colors:['#F5821F','#FF9F43']}),400);
 }
-
-function randDigits(n){let s='';for(let i=0;i<n;i++)s+=Math.floor(Math.random()*10);return s;}
-function randBillTease(){return 'IOC-'+randDigits(4)+'-'+randDigits(4);}
-function randMobileTease(){return '9'+randDigits(9);}
-
-async function startDraw(){
-  if(!ENTRIES.length){alert('No entries yet — nothing to draw from.'); return;}
+function startDraw(){
   const btn=document.getElementById('startBtn');
   btn.disabled=true;
   const ledBill=document.getElementById('ledBill');
   const ledMobile=document.getElementById('ledMobile');
   const counterEl=document.getElementById('ledCounter');
   ledBill.classList.add('spinning'); ledMobile.classList.add('spinning');
-
-  // Kick off the real server-side draw immediately; reveal when the animation finishes.
-  const drawPromise=api('/api/winner',{method:'POST'}).then(r=>r.json()).catch(e=>({ok:false,error:'Network error'}));
-
-  const total=ENTRIES.length;
-  let ticks=0; const totalTicks=42; let delay=55;
+  let ticks=0; const totalTicks=46; let delay=55;
   function tick(){
-    ledBill.textContent=randBillTease();
-    ledMobile.textContent=randMobileTease();
-    counterEl.textContent=(Math.min(total,1+Math.floor(Math.random()*total))).toLocaleString('en-IN')+' / '+total.toLocaleString('en-IN')+' SCANNED';
-    ticks++; delay*=1.05;
-    if(ticks<totalTicks){setTimeout(tick,delay);}
-    else{finishDraw();}
-  }
-  async function finishDraw(){
-    const data=await drawPromise;
-    ledBill.classList.remove('spinning'); ledMobile.classList.remove('spinning');
-    if(!data.ok){
-      counterEl.textContent='DRAW FAILED';
-      alert('⚠ '+(data.error||'Could not pick a winner'));
-      btn.disabled=false;
-      return;
+    ledBill.textContent=randBill();
+    ledMobile.textContent=maskMobile();
+    counterEl.textContent=(rand(1000,17880)).toLocaleString('en-IN')+' / 17,880 SCANNED';
+    ticks++;
+    delay=delay*1.045;
+    if(ticks<totalTicks){ setTimeout(tick,delay); }
+    else{
+      ledBill.classList.remove('spinning'); ledMobile.classList.remove('spinning');
+      const finalBill=randBill(), finalMobile=maskMobile(), finalAmount='₹'+rand(400,2600).toLocaleString('en-IN'), finalPump=pick(PUMPS);
+      ledBill.textContent=finalBill; ledMobile.textContent=finalMobile;
+      counterEl.textContent='WINNER LOCKED · DRAW COMPLETE';
+      revealWinner(finalBill,finalMobile,finalAmount,finalPump);
     }
-    const w=data.winner;
-    ledBill.textContent=esc(w.bill);
-    ledMobile.textContent=esc(w.phone);
-    counterEl.textContent='WINNER LOCKED · DRAW COMPLETE';
-    revealWinner(w);
   }
   tick();
 }
-
-function revealWinner(w){
+function revealWinner(bill,mobile,amount,pump){
   document.getElementById('ld-idle').style.display='none';
-  document.getElementById('wName').textContent=w.name;
-  document.getElementById('wBill').textContent=w.bill;
-  document.getElementById('wMobile').textContent=w.phone;
-  document.getElementById('wSource').textContent=w.source||'web';
-  document.getElementById('wTime').textContent=fmt(w.wonAt||new Date().toISOString());
-  document.getElementById('winner-sub').textContent=`Winner selected fairly from ${ENTRIES.length.toLocaleString('en-IN')} eligible entries.`;
+  document.getElementById('wBill').textContent=bill;
+  document.getElementById('wMobile').textContent=mobile;
+  document.getElementById('wAmount').textContent=amount;
+  document.getElementById('wPump').textContent=pump;
+  const now=new Date();
+  document.getElementById('wTime').textContent='07 Jul 2026, '+now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
   document.getElementById('ld-winner').classList.add('show');
   fireConfetti();
-  loadAll(); // refresh winners list + KPIs
+  winnerCount++;
+  WINNERS.unshift({no:'WIN-'+String(winnerCount).padStart(3,'0'),mobile:mobile,bill:bill,amount:amount,pump:pump,date:'07 Jul 2026, '+now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}),status:'Pending'});
+  renderWinners();
 }
-
 function resetDraw(){
   document.getElementById('ld-winner').classList.remove('show');
   document.getElementById('ld-idle').style.display='block';
   document.getElementById('startBtn').disabled=false;
-  document.getElementById('ledCounter').textContent=`0 / ${ENTRIES.length.toLocaleString('en-IN')} SCANNED`;
+  document.getElementById('ledCounter').textContent='0 / 17,880 SCANNED';
   document.getElementById('ledBill').textContent='IOC-••••••••';
   document.getElementById('ledMobile').textContent='9••••••••';
 }
-function goToWinners(){resetDraw(); showView('winners');}
-
-/* ================= INIT ================= */
-loadAll();
-setInterval(loadAll,15000);
+function goToWinners(){ resetDraw(); showView('winners'); }
 </script>
 </body>
 </html>
