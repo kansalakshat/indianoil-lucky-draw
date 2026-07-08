@@ -1,0 +1,16 @@
+{
+  "name": "indianoil-lucky-draw",
+  "version": "1.0.0",
+  "description": "IndianOil lucky draw - collect entries via SMS/WhatsApp/web and pick a random winner from an admin dashboard.",
+  "main": "server.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

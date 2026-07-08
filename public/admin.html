@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IndianOil Lucky Draw — Admin</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo">🔥</div>
+    <div>
+      <h1>Admin Dashboard</h1>
+      <div class="sub">IndianOil Lucky Draw — Manage entries &amp; pick winners</div>
+    </div>
+    <div class="spacer"></div>
+    <a class="nav-link" href="index.html">+ Add Entry</a>
+  </header>
+
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><div class="num" id="totalEntries">0</div><div class="lbl">Total Entries</div></div>
+      <div class="stat"><div class="num" id="totalWinners">0</div><div class="lbl">Winners Drawn</div></div>
+    </div>
+
+    <div class="card" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+      <div>
+        <h2>Find a Winner</h2>
+        <p class="hint" style="margin:0">Randomly selects one lucky participant from all registered entries.</p>
+      </div>
+      <div style="display:flex;gap:12px">
+        <button class="btn btn-ghost" onclick="loadAll()">↻ Refresh</button>
+        <button class="btn btn-orange btn-big" id="drawBtn" onclick="drawWinner()">🏆 Find Winner</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Registered Participants</h2>
+      <p class="hint">All entries received via web form, SMS and WhatsApp.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>Name</th><th>Phone</th><th>Bill No.</th><th>Source</th><th>Received</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="entriesBody">
+            <tr><td colspan="7" class="empty">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" id="winnersCard" style="display:none">
+      <h2>Past Winners</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Phone</th><th>Bill No.</th><th>Won At</th></tr></thead>
+          <tbody id="winnersBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Winner announcement modal -->
+  <div class="overlay" id="overlay" onclick="closeOverlay(event)">
+    <div class="winner-card" onclick="event.stopPropagation()">
+      <div class="trophy">🏆</div>
+      <h2>Congratulations!</h2>
+      <div class="wname" id="wName">—</div>
+      <div class="wmeta">📞 <span id="wPhone">—</span><br />🧾 Bill <span id="wBill">—</span></div>
+      <button class="btn btn-blue" onclick="closeOverlay()">Close</button>
+    </div>
+  </div>
+
+  <div class="footer">IndianOil Lucky Draw · Admin · Demo application</div>
+
+  <script>
+    function fmt(iso) {
+      const d = new Date(iso);
+      return d.toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+    }
+
+    async function loadAll() {
+      const [eRes, wRes] = await Promise.all([
+        fetch('/api/entries').then(r => r.json()),
+        fetch('/api/winners').then(r => r.json()),
+      ]);
+
+      document.getElementById('totalEntries').textContent = eRes.count;
+      document.getElementById('totalWinners').textContent = wRes.winners.length;
+
+      const body = document.getElementById('entriesBody');
+      if (eRes.entries.length === 0) {
+        body.innerHTML = '<tr><td colspan="7" class="empty">No entries yet. Share the registration link or SMS/WhatsApp number.</td></tr>';
+      } else {
+        body.innerHTML = eRes.entries.map((e, i) => `
+          <tr>
+            <td>${eRes.entries.length - i}</td>
+            <td><b>${esc(e.name)}</b></td>
+            <td>${esc(e.phone)}</td>
+            <td>${esc(e.bill)}</td>
+            <td><span class="badge ${e.source}">${e.source}</span></td>
+            <td>${fmt(e.createdAt)}</td>
+            <td><button class="del" onclick="del('${e.id}')">Remove</button></td>
+          </tr>`).join('');
+      }
+
+      const wCard = document.getElementById('winnersCard');
+      const wBody = document.getElementById('winnersBody');
+      if (wRes.winners.length) {
+        wCard.style.display = 'block';
+        wBody.innerHTML = wRes.winners.map(w => `
+          <tr><td><b>${esc(w.name)}</b></td><td>${esc(w.phone)}</td><td>${esc(w.bill)}</td><td>${fmt(w.wonAt)}</td></tr>
+        `).join('');
+      } else {
+        wCard.style.display = 'none';
+      }
+    }
+
+    function esc(s) {
+      return String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
+    }
+
+    async function del(id) {
+      await fetch('/api/entries/' + id, { method: 'DELETE' });
+      loadAll();
+    }
+
+    async function drawWinner() {
+      const btn = document.getElementById('drawBtn');
+      btn.disabled = true;
+      const res = await fetch('/api/winner', { method: 'POST' });
+      const data = await res.json();
+      btn.disabled = false;
+      if (!data.ok) { alert('⚠ ' + data.error); return; }
+      document.getElementById('wName').textContent = data.winner.name;
+      document.getElementById('wPhone').textContent = data.winner.phone;
+      document.getElementById('wBill').textContent = data.winner.bill;
+      document.getElementById('overlay').classList.add('show');
+      loadAll();
+    }
+
+    function closeOverlay(e) {
+      document.getElementById('overlay').classList.remove('show');
+    }
+
+    loadAll();
+    setInterval(loadAll, 15000); // auto-refresh
+  </script>
+</body>
+</html>

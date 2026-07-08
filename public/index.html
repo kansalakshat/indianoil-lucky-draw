@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IndianOil Lucky Draw — Register</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo">🔥</div>
+    <div>
+      <h1>IndianOil Lucky Draw</h1>
+      <div class="sub">Register your fuel bill &amp; stand a chance to win</div>
+    </div>
+    <div class="spacer"></div>
+    <a class="nav-link" href="admin.html">Admin Dashboard →</a>
+  </header>
+
+  <div class="wrap">
+    <div class="card">
+      <h2>Enter the Lucky Draw</h2>
+      <p class="hint">Fill in your details below. You can also enter by sending an SMS or WhatsApp message
+        in the format: <b>Name, Phone, Bill No.</b></p>
+
+      <form id="entryForm">
+        <div class="form-grid">
+          <div class="field">
+            <label for="name">Full Name</label>
+            <input id="name" name="name" placeholder="e.g. Akshat Kansal" required />
+          </div>
+          <div class="field">
+            <label for="phone">Phone Number</label>
+            <input id="phone" name="phone" placeholder="e.g. 9876543210" required />
+          </div>
+          <div class="field full">
+            <label for="bill">Bill / Invoice Number</label>
+            <input id="bill" name="bill" placeholder="e.g. INV-2201" required />
+          </div>
+        </div>
+        <div style="margin-top:20px">
+          <button class="btn btn-orange btn-big" type="submit">Submit Entry</button>
+        </div>
+        <div id="msg" class="msg"></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="footer">IndianOil Lucky Draw · Demo application</div>
+
+  <script>
+    const form = document.getElementById('entryForm');
+    const msg = document.getElementById('msg');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.textContent = '';
+      const body = {
+        name: document.getElementById('name').value,
+        phone: document.getElementById('phone').value,
+        bill: document.getElementById('bill').value,
+      };
+      try {
+        const res = await fetch('/api/entries', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          msg.className = 'msg ok';
+          msg.textContent = '✅ Entry registered! Best of luck, ' + data.entry.name + '.';
+          form.reset();
+        } else {
+          msg.className = 'msg err';
+          msg.textContent = '⚠ ' + data.error;
+        }
+      } catch (err) {
+        msg.className = 'msg err';
+        msg.textContent = '⚠ Could not submit. Please try again.';
+      }
+    });
+  </script>
+</body>
+</html>
